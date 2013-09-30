@@ -1,4 +1,5 @@
 require "jason.utils"
+require "jason.stats"
 
 module("jason.commit_summary", package.seeall)
 
@@ -63,4 +64,24 @@ function CommitSummary:grouped_by_intervals(interval)
 	end
 
 	return CommitSummary.new(groups, sorted_commit_times(groups))
+end
+
+function CommitSummary:print_date_meansize_stderrlow_stderrhi()
+	local px = {}
+	local py = {}
+	for i,n in ipairs(self.times) do
+		local m = jason.stats.mean(self.commits[n])
+		local rn = jason.stats.standardError(self.commits[n])
+		px[#px+1] = n
+
+		local y = {}
+		y[#y+1] = m
+		y[#y+1] = math.max(1, m - rn)
+		y[#y+1] = m + rn
+
+		py[#py+1] = y
+	end
+	for i,n in ipairs(px) do
+		print(os.date("%x", px[i]) .. " " .. py[i][1] .. " " .. py[i][2] .. " " .. py[i][3])
+	end
 end
