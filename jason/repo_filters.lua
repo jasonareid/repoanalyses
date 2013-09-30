@@ -4,10 +4,9 @@ module("jason.repo_filters", package.seeall)
 
 function generate_commit_summary(repo, filetypes)
 	local commits = count_files_in_each_commit(repo, filetypes)
-	local times = sorted_commit_times(commits)
-	local summary = CommitSummary.new(commits, times)
+	local times   = sorted_commit_times(commits)
 	
-	return summary
+	return CommitSummary.new(commits, times)
 end
 
 function fcount(filelist, filetypes)
