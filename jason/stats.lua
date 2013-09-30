@@ -21,6 +21,8 @@ function mean( t )
     end
   end
 
+  if count == 0 then return 0 end
+
   return (sum / count)
 end
 
@@ -118,8 +120,10 @@ end
 
 -- Get the standard error of a table
 function standardError( t )
-  local r = standardDeviation(t)
   local n = sampleSize(t)
+  if n == 0 then return 0 end
+
+  local r = standardDeviation(t)
   return r / math.sqrt(n)
 end
 
