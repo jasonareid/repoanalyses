@@ -10,11 +10,13 @@ function BranchSpec.new(excludes)
 	local self = {}
 	setmetatable(self, {__index = BranchSpec})
 	
-	self.excludes = branches_to_exclude
+	self.excludes = excludes
 	return self
 end
 
 function BranchSpec:accepts(branch)
-	
-	return branch ~= "master"
+	if jason.utils.find(self.excludes, function(v) return v == branch end) then
+		return false
+	end
+	return true
 end
