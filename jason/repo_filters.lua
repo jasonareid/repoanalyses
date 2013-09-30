@@ -1,3 +1,5 @@
+require "jason.utils"
+
 module("jason.repo_filters", package.seeall)
 
 function generate_commit_summary(repo, filetypes)
@@ -37,10 +39,7 @@ function count_files_in_each_commit(repo, filetypes)
 end
 
 function sorted_commit_times(commits)
-	local commit_times = {}
-	for n in pairs(commits) do commit_times[#commit_times + 1] = n end
-	table.sort(commit_times)
-	return commit_times
+	return jason.utils.sorted_keys(commits)
 end
 
 CommitSummary = {}
