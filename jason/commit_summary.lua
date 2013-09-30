@@ -22,8 +22,8 @@ function count_files_in_each_commit(repo, filetypes)
 	local branches = repo:branches()
 	local commits = {}
 	for k, branch in pairs(branches) do
-		local iter = repo:iterator(branch)
 		if branch ~= "master" then
+			local iter = repo:iterator(branch)
 			for rev in iter:revisions() do
 				ds = rev:diffstat()
 				fs = ds:files()
