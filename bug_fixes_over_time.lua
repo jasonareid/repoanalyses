@@ -15,6 +15,6 @@ function run(self)
 	local message_spec = jason.message_spec.include({"bug", "fix", "resolv", "error", "issue", "oops"})
 	local commits = jason.commit_summary.generate_commit_summary(repo, branch_spec, jason.commit_summary.FILETYPES_RUBY, message_spec)
 	local grouped = commits:grouped_by_intervals(jason.commit_summary.INTERVAL_ONE_WEEK)
-	io.stderr:write("\ntimes "..jason.utils.size(grouped.times) .. " first " .. os.date("%m/%d/%Y", grouped.times[1]) .. " last " .. os.date("%m/%d/%Y", grouped.times[#grouped.times]) .. "\n")
-	grouped:print_date_meansize_stderrlow_stderrhi()
+	grouped:print_date_count()
+--	commits:print_messages()
 end

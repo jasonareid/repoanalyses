@@ -8,11 +8,13 @@ INTERVAL_ONE_DAY  = 60 * 60 * 24
 INTERVAL_ONE_WEEK = INTERVAL_ONE_DAY * 7
 FILETYPES_RUBY = {".rb", ".scss", ".css", ".js", ".coffee", ".erb", ".html", ".rhtml", ".rake"}
 
+MESSAGES = {}
+
 function generate_commit_summary(repo, branch_spec, filetypes, message_spec)
 	message_spec = message_spec or jason.message_spec.accept_all()
 	
-	local commits = count_files_in_each_commit(repo, branch_spec, filetypes, message_spec)
-	local times   = sorted_commit_times(commits)
+	local commits  = count_files_in_each_commit(repo, branch_spec, filetypes, message_spec)
+	local times    = sorted_commit_times(commits)
 	
 	return CommitSummary.new(commits, times)
 end
@@ -29,6 +31,7 @@ function count_files_in_each_commit(repo, branch_spec, filetypes, message_spec)
 					local ds = rev:diffstat()
 					local fcount = fcount(ds:files(), filetypes)
 					commits[rev:date()] = fcount
+					MESSAGES[rev:date()] = rev:message()
 				end
 			end
 		end
@@ -96,19 +99,17 @@ end
 function CommitSummary:print_date_count()
 	local px = {}
 	local py = {}
-	for i,n in ipairs(self.times) do
-		local m = jason.stats.mean(self.commits[n])
-		local rn = jason.stats.standardError(self.commits[n])
-		px[#px+1] = n
-
-		local y = {}
-		y[#y+1] = m
-		y[#y+1] = math.max(1, m - rn)
-		y[#y+1] = m + rn
-
-		py[#py+1] = y
+	for i,date in ipairs(self.times) do
+		px[#px+1] = date
+		py[#py+1] = jason.utils.size(self.commits[date])
 	end
 	for i,n in ipairs(px) do
-		print(os.date("%x", px[i]) .. " " .. py[i][1] .. " " .. py[i][2] .. " " .. py[i][3])
+		print(os.date("%x", px[i]) .. " " .. py[i])
+	end
+end
+
+function CommitSummary:print_messages()
+	for i,date in ipairs(self.times) do
+		print(os.date("%x", date) .. " " .. MESSAGES[date])
 	end
 end
