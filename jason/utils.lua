@@ -17,6 +17,13 @@ function count_if(t, filterIter)
 	return count
 end
 
+function string_ends_with_any_of(str, endings)
+	for i, ending in ipairs(endings) do
+		if string_ends_with(str, ending) then return true end
+	end
+	return false
+end
+
 function string_ends_with(str, ending)
 	return string.sub(str,-string.len(ending)) == ending
 end

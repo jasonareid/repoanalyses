@@ -12,10 +12,7 @@ end
 
 function fcount(filelist, filetypes)
 	return jason.utils.count_if(filelist, function(_k, v_filename, _t)
-		for i, ftype in ipairs(filetypes) do
-			if jason.utils.string_ends_with(v_filename, ftype) then return true end
-		end
-		return false
+		return jason.utils.string_ends_with_any_of(v_filename, filetypes)
 	end)
 end
 
