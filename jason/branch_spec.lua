@@ -15,8 +15,5 @@ function BranchSpec.new(excludes)
 end
 
 function BranchSpec:accepts(branch)
-	if jason.utils.find(self.excludes, function(v) return v == branch end) then
-		return false
-	end
-	return true
+	return not jason.utils.find(self.excludes, function(v) return v == branch end)
 end
