@@ -11,13 +11,12 @@ function generate_commit_summary(repo, filetypes)
 end
 
 function fcount(filelist, filetypes)
-	local count = 0
-	for i, f in ipairs(filelist) do
-		for i2, ft in ipairs(filetypes) do
-			if string.sub(f,-string.len(ft))==ft then count = count + 1 end
+	return jason.utils.count_if(filelist, function(_k, v_filename, _t)
+		for i, ftype in ipairs(filetypes) do
+			if jason.utils.string_ends_with(v_filename, ftype) then return true end
 		end
-	end
-	return count
+		return false
+	end)
 end
 
 function count_files_in_each_commit(repo, filetypes)

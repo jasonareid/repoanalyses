@@ -6,3 +6,17 @@ function sorted_keys(t)
 	table.sort(ks)
 	return ks
 end
+
+function count_if(t, filterIter)
+	local count = 0
+ 
+	for k, v in pairs(t) do
+		if filterIter(k, v, t) then count = count + 1 end
+	end
+
+	return count
+end
+
+function string_ends_with(str, ending)
+	return string.sub(str,-string.len(ending)) == ending
+end
