@@ -54,24 +54,18 @@ function CommitSummary.new(commits, times)
 end
 
 function CommitSummary:grouped_by_intervals(interval)
-	local commit_times = self.times
-	local commits = self.commits
-	
-	local bucket_times = {}
-	local buckets = {}
+	local groups = {}
 
-	local current_bucket_start_time = commit_times[1]
-	bucket_times[1] = current_bucket_start_time
-	buckets[current_bucket_start_time] = {}
-	for i,n in ipairs(commit_times) do 
-		if n > current_bucket_start_time + interval then
-			current_bucket_start_time = current_bucket_start_time + interval
-			bucket_times[#bucket_times + 1] = current_bucket_start_time
-			buckets[current_bucket_start_time] = {}
+	local current_group_time = self.times[1]
+	groups[current_group_time] = {}
+	for i,n in ipairs(self.times) do 
+		if n > current_group_time + interval then
+			current_group_time = current_group_time + interval
+			groups[current_group_time] = {}
 		end
-		bucket = buckets[current_bucket_start_time]
-		bucket[#bucket + 1] = commits[n]
+		group = groups[current_group_time]
+		group[#group + 1] = self.commits[n]
 	end
 
-	return CommitSummary.new(buckets, bucket_times)
+	return CommitSummary.new(groups, sorted_commit_times(groups))
 end
