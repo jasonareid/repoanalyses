@@ -58,13 +58,13 @@ function CommitSummary:grouped_by_intervals(interval)
 
 	local current_group_time = self.times[1]
 	groups[current_group_time] = {}
-	for i,n in ipairs(self.times) do 
-		if n > current_group_time + interval then
+	for i,time in ipairs(self.times) do 
+		if time > current_group_time + interval then
 			current_group_time = current_group_time + interval
 			groups[current_group_time] = {}
 		end
 		group = groups[current_group_time]
-		group[#group + 1] = self.commits[n]
+		group[#group + 1] = self.commits[time]
 	end
 
 	return CommitSummary.new(groups, sorted_commit_times(groups))
