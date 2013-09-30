@@ -1,28 +1,33 @@
 require "jason.utils"
 require "jason.stats"
+require "jason.message_spec"
 
 module("jason.commit_summary", package.seeall)
 
 INTERVAL_ONE_WEEK = 60 * 60 * 24 * 7
 FILETYPES_RUBY = {".rb", ".scss", ".css", ".js", ".coffee", ".erb", ".html", ".rhtml", ".rake"}
 
-function generate_commit_summary(repo, branch_spec, filetypes)
-	local commits = count_files_in_each_commit(repo, branch_spec, filetypes)
+function generate_commit_summary(repo, branch_spec, filetypes, message_spec)
+	message_spec = message_spec or jason.message_spec.include({})
+	
+	local commits = count_files_in_each_commit(repo, branch_spec, filetypes, message_spec)
 	local times   = sorted_commit_times(commits)
 	
 	return CommitSummary.new(commits, times)
 end
 
-function count_files_in_each_commit(repo, branch_spec, filetypes)
+function count_files_in_each_commit(repo, branch_spec, filetypes, message_spec)
 	local branches = repo:branches()
 	local commits = {}
 	for k, branch in pairs(branches) do
 		if branch_spec:accepts(branch) then
 			local iter = repo:iterator(branch)
 			for rev in iter:revisions() do
-				local ds = rev:diffstat()
-				local fcount = fcount(ds:files(), filetypes)
-				commits[rev:date()] = fcount
+				if message_spec:accepts(rev:message()) then
+					local ds = rev:diffstat()
+					local fcount = fcount(ds:files(), filetypes)
+					commits[rev:date()] = fcount
+				end
 			end
 		end
 	end
