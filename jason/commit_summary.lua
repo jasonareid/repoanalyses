@@ -1,6 +1,9 @@
 require "jason.utils"
 
-module("jason.repo_filters", package.seeall)
+module("jason.commit_summary", package.seeall)
+
+INTERVAL_ONE_WEEK = 60 * 60 * 24 * 7
+FILETYPES_RUBY = {".rb", ".scss", ".css", ".js", ".coffee", ".erb", ".html", ".rhtml", ".rake"}
 
 function generate_commit_summary(repo, filetypes)
 	local commits = count_files_in_each_commit(repo, filetypes)
