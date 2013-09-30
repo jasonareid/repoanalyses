@@ -12,17 +12,11 @@ function generate_commit_summary(repo, filetypes)
 	return CommitSummary.new(commits, times)
 end
 
-function fcount(filelist, filetypes)
-	return jason.utils.count_if(filelist, function(_k, v_filename, _t)
-		return jason.utils.string_ends_with_any_of(v_filename, filetypes)
-	end)
-end
-
 function count_files_in_each_commit(repo, filetypes)
 	local branches = repo:branches()
 	local commits = {}
 	for k, branch in pairs(branches) do
-		if branch ~= "master" then
+		if count_this_branch(branch) then
 			local iter = repo:iterator(branch)
 			for rev in iter:revisions() do
 				ds = rev:diffstat()
@@ -33,6 +27,16 @@ function count_files_in_each_commit(repo, filetypes)
 		end
 	end
 	return commits
+end
+
+function count_this_branch(branch)
+	return branch ~= "master"
+end
+
+function fcount(filelist, filetypes)
+	return jason.utils.count_if(filelist, function(_k, v_filename, _t)
+		return jason.utils.string_ends_with_any_of(v_filename, filetypes)
+	end)
 end
 
 function sorted_commit_times(commits)
