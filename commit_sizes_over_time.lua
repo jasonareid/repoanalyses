@@ -1,5 +1,6 @@
 require "jason.stats"
 require "jason.commit_summary"
+require "jason.branch_spec"
 require "pepper.plotutils"
 
 function describe()
@@ -13,7 +14,8 @@ end
 
 function run(self)
 	local repo = self:repository()
-	local commits = jason.commit_summary.generate_commit_summary(repo, jason.commit_summary.FILETYPES_RUBY)
+	local branch_spec = jason.branch_spec.exclude("master")
+	local commits = jason.commit_summary.generate_commit_summary(repo, branch_spec, jason.commit_summary.FILETYPES_RUBY)
 	local grouped = commits:grouped_by_intervals(jason.commit_summary.INTERVAL_ONE_WEEK)
 	print_date_meansize_stderrlow_stderrhi(grouped)
 end

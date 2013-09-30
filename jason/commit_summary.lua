@@ -5,18 +5,18 @@ module("jason.commit_summary", package.seeall)
 INTERVAL_ONE_WEEK = 60 * 60 * 24 * 7
 FILETYPES_RUBY = {".rb", ".scss", ".css", ".js", ".coffee", ".erb", ".html", ".rhtml", ".rake"}
 
-function generate_commit_summary(repo, filetypes)
-	local commits = count_files_in_each_commit(repo, filetypes)
+function generate_commit_summary(repo, branch_spec, filetypes)
+	local commits = count_files_in_each_commit(repo, branch_spec, filetypes)
 	local times   = sorted_commit_times(commits)
 	
 	return CommitSummary.new(commits, times)
 end
 
-function count_files_in_each_commit(repo, filetypes)
+function count_files_in_each_commit(repo, branch_spec, filetypes)
 	local branches = repo:branches()
 	local commits = {}
 	for k, branch in pairs(branches) do
-		if count_this_branch(branch) then
+		if count_this_branch(branch, branch_spec) then
 			local iter = repo:iterator(branch)
 			for rev in iter:revisions() do
 				ds = rev:diffstat()
@@ -29,7 +29,7 @@ function count_files_in_each_commit(repo, filetypes)
 	return commits
 end
 
-function count_this_branch(branch)
+function count_this_branch(branch, branch_spec)
 	return branch ~= "master"
 end
 
