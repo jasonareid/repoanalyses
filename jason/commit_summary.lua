@@ -30,7 +30,7 @@ function count_files_in_each_commit(repo, branch_spec, filetypes)
 end
 
 function count_this_branch(branch, branch_spec)
-	return branch ~= "master"
+	return branch_spec:accepts(branch)
 end
 
 function fcount(filelist, filetypes)

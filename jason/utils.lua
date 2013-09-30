@@ -7,11 +7,20 @@ function sorted_keys(t)
 	return ks
 end
 
-function count_if(t, filterIter)
+function find(t, f)
+  for _, v in ipairs(t) do
+    if f(v) then
+      return v
+    end
+  end
+  return nil
+end
+
+function count_if(t, f)
 	local count = 0
  
 	for k, v in pairs(t) do
-		if filterIter(k, v, t) then count = count + 1 end
+		if f(k, v, t) then count = count + 1 end
 	end
 
 	return count
