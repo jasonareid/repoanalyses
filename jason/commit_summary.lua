@@ -19,8 +19,7 @@ function count_files_in_each_commit(repo, branch_spec, filetypes)
 		if count_this_branch(branch, branch_spec) then
 			local iter = repo:iterator(branch)
 			for rev in iter:revisions() do
-				ds = rev:diffstat()
-				fs = ds:files()
+				local ds = rev:diffstat()
 				local fcount = fcount(ds:files(), filetypes)
 				commits[rev:date()] = fcount
 			end

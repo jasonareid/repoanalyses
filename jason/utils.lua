@@ -1,5 +1,11 @@
 module("jason.utils", package.seeall)
 
+function size(t)
+	local count = 0
+	for _ in pairs(t) do count = count + 1 end
+	return count
+end
+
 function sorted_keys(t)
 	local ks = {}
 	for n in pairs(t) do ks[#ks + 1] = n end
